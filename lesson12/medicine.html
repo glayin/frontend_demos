@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src= "jquery.min.js"></script>
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        li {
+            list-style-type: none;
+        }
+        
+        .tab {
+           
+            margin: 100px auto;
+            padding-left: 10px;
+            padding-right:10px;
+            width: 520px;
+            background-color:rgb(242, 242, 242) ;
+        }
+        
+        .tab_list {
+            height: 39px;
+            /* border: 1px solid #ccc; */
+            background-color: #f1f1f1;
+            display: inline-flex;
+            width: 500px;
+        }
+        
+        .tab_list li {
+            float: left;
+            height: 39px;
+            line-height: 39px;
+            padding-left: 20px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            width: 60px;
+            margin-right:20px;
+        }
+        
+        .tab_list .current {
+            color:rgb(43, 159, 210) ;
+            border-bottom: 2px solid rgb(43, 159, 210);
+        }
+        
+        .item_info {
+            padding: 20px 0 0 20px;
+        }
+        
+        .item {
+            display: none;
+            width: 520px;
+        }
+
+        img{
+            width: 90px;
+            height: 90px;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .info{
+            display: grid;
+            grid-template-columns: 408px 1fr;
+            margin-top: 20px;
+            margin-right: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgb(242, 242, 242) ;
+        }
+
+        #individual{
+            width: 500px;
+            padding-left:10px;
+            padding-right:10px;
+            border-radius: 1px;
+            background-color:white;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .link{
+            position: relative;
+            height: 40px;
+        }
+
+        #link{
+            width: 90px;
+            height:35px;
+            background-color:rgb(58, 166, 213);
+            border-radius: 5px;
+            border: none;
+            position: absolute;
+            bottom: 30%;
+            right: 10%;
+        }
+        .person{display: grid;
+                grid-template-columns: 120px 2fr;}
+        .person p{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .state{position: relative;}
+        .state p:nth-last-child(2) {color:red;}
+        .state p:nth-last-child(1){
+            font-size: 20px;
+            position: absolute;
+            bottom: 0;
+            right: 30%;
+        }
+
+        
+       
+        .content{height: 100px;
+                padding-left: 10px;
+                display: grid;
+                grid-template-columns: 1.1fr 5fr;
+                padding-top: 20px;}
+
+        .delivery_info{
+            width: 300px;
+            height: 200px;
+            position: absolute;
+            left: 30%;
+            top: 50%;
+            z-index: 9999;
+            background-color:rgb(242, 242, 242) ;
+            
+        } 
+        .close{position: absolute;
+               right: 5%;
+               top:0%;  }
+        .details_delivery{
+            display: grid;
+            padding-top: 25px;
+            grid-template-columns: 1fr 4fr;
+        }       
+        </style>
+</head>
+
+<body>
+
+
+
+    <div class="tab">
+        <div class="tab_list">
+            <ul>
+                <li class="current">全部 </li>
+                <li>待审核</li>
+                <li>待付款</li>
+                <li>待收货</li>
+                <li>已收货</li>
+            </ul>
+        </div>
+        <div class="tab_con">
+            <div class="item" style="display: block;">
+
+            </div>
+            <div class="item">
+                待审核
+            </div>
+            <div class="item">
+                待付款
+            </div>
+            <div class="item">
+                待收货
+            </div>
+            <div class="item">
+               已收货
+            </div>
+
+        </div>
+    </div>
+    <div id="bg" class="modal-bg"> </div>
+    <div class="delivery_info" style = "display: none;"> 
+        <div class = "details_delivery"></div>
+        
+    </div>
+    <script>
+        // 获取元素
+        let $tab_list = $('.tab_list'),
+        $lis = $('*li'),
+        $items = $('* .item'),
+        $orderData,$orderList;  
+        let $details_delivery = $('.details_delivery');
+        let order = [
+            
+            {
+                img : '1.jpg',
+                name: '王大锤',
+                gender_age:'男 ; 30',
+                date:'2019年3月8日',
+
+                status:'待收货',
+                price:'￥58.80',
+
+                disease_descri:'病情描述 ： ',
+                details_disease:'这两天头部神经一跳一条地疼，让人心烦意乱。还失眠。晚上睡觉头也疼',
+                boil:'是否代煎 ： ',
+                details_boil:'是',
+
+                delivery_time:'2020/12/31',
+                address:'长安区西沣路兴隆段266号',
+                posted_time: '2021/01/09'
+
+            },
+
+            {
+                img : '1.jpg',
+                name:'王小锤',
+                gender_age:'男 ; 4',
+                date:'2019年3月8日',
+
+                status:'待付款',
+                price:'￥96.35',
+
+                disease_descri:'病情描述 ： ',
+                details_disease:'近三天拉肚子，呕吐，发烧到38.5°，进食难',
+                boil:'是否代煎 :  ',
+                details_boil:'是'
+            },
+            
+            {
+                img : '1.jpg',
+                name : '丁敏',
+                gender_age:'女 ; 28',
+                date:'2019年1月8日',
+
+                status:'待审核',
+                price:'￥58.80',
+
+                disease_descri:'病情描述 ： ',
+                details_disease:'腹部疼痛难忍',
+                boil:'是否代煎 ： ',
+                details_boil:'是'
+            }
+         ];
+
+        // for循环绑定点击事件
+        for (var i = 0; i < $lis.length; i++) {
+            // 开始给5个小li 设置索引号 
+            $lis[i].setAttribute('index', i);
+            $lis[i].onclick = function() {
+                $items.empty();
+               
+                for (let i = 0; i < $lis.length; i++) {
+                    $lis[i].className = '';
+                }
+              
+                this.className = 'current';
+                
+                let index = this.getAttribute('index');
+                index = parseInt(index);
+                
+                for (let i = 0; i < $items.length; i++) {
+                    $items[i].style.display = 'none';
+                }
+                
+                $items[index].style.display = 'block';
+                
+                
+                switch(index){
+                    case 0 : showorderData(order);
+                    case 1 : showUnchecked( );
+                }
+
+                //if(index===0) showorderData(order);
+                //if(index==1) showUnchecked(order);
+                if(index==2) showUnPaid(order);
+                if(index==3) showPosted(order);
+            }
+              
+
+        }
+
+        function showorderData(order){
+            order.forEach(function(item){
+                $orderData = `<div id="individual">
+                    <div class="info">
+
+                        <div class="person">
+                            <img src = '${item.img}'> </img>
+                            <div ><p>${item.name}</p> <p>${item.gender_age}</p><p>${item.date}</p></div>
+                        </div>
+
+                        <div class = "state">
+                            <p>${item.status}</p>
+                            <p>${item.price}</p>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <span>${item.disease_descri}</span>
+                        <span>${item.details_disease}</span>
+                        <span>${item.boil}</span>
+                        <span>${item.details_boil}</span>
+                    </div>
+                </div>`;
+                $items.append($orderData);
+                if(`${item.status}`=='待收货'||`${item.status}`=='已收货') {$("#individual").append(`<div class = 'link'><button id = "link" href = "javascript:;" >查看物流</button></div>`);
+                let $link  = $('#link');
+                let $delivery_info = $('.delivery_info');
+
+                $link.on('click',function(){
+                    $delivery_info[0].style.display = 'block';
+                    $delivery_info.empty();
+                    $details_delivery = `<div><span>发货时间 ：</span><span>${item.delivery_time}</span></div><div><span>收货地址 ：</span><span>${item.address}</span></div><div><span>收货时间 ：</span><span>${item.posted_time}</span></div> `;
+                    $delivery_info.append(`<div style = "height:25px" ><button class="close" href="javascript:;">关闭</button></div>`);
+                    $delivery_info.append($details_delivery);
+                    let $close = $(".close");
+                    $close.on('click', function(){ 
+                    $delivery_info[0].style.display = 'none';
+                })
+                
+                })
+                
+                }
+                })
+        }
+        
+        function showUnchecked( ){
+            
+            order.forEach(function(item){
+                if(`${item.status}`=='待审核'){
+                    $items.append($orderData);
+                }
+            })
+        }
+
+        function showUnPaid(order){
+      
+            order.forEach(function(item){
+                $orderData = `<div id="individual">
+                    <div class="info">
+
+                        <div class="person">
+                            <img src = '${item.img}'> </img>
+                            <div ><p>${item.name}</p> <p>${item.gender_age}</p><p>${item.date}</p></div>
+                        </div>
+
+                        <div class = "state">
+                            <p>${item.status}</p>
+                            <p>${item.price}</p>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <span>${item.disease_descri}</span>
+                        <span>${item.details_disease}</span>
+                        <span>${item.boil}</span>
+                        <span>${item.details_boil}</span>
+                    </div>
+                </div>`;
+                if(`${item.status}`=='待付款'){
+                    $items.append($orderData);
+                }
+            })
+        }
+
+        function showPosted(order){
+            order.forEach(function(item){
+                $orderData = `<div id="individual">
+                    <div class="info">
+
+                        <div class="person">
+                            <img src = '${item.img}'> </img>
+                            <div ><p>${item.name}</p> <p>${item.gender_age}</p><p>${item.date}</p></div>
+                        </div>
+
+                        <div class = "state">
+                            <p>${item.status}</p>
+                            <p>${item.price}</p>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <span>${item.disease_descri}</span>
+                        <span>${item.details_disease}</span>
+                        <span>${item.boil}</span>
+                        <span>${item.details_boil}</span>
+                    </div>
+                </div>`;
+                if(`${item.status}`=='待收货'){
+                    $items.append($orderData);
+                }
+            })
+        }
+        let init = () => {  showorderData(order); };
+        init();
+    </script>
+</body>
+
+</html>

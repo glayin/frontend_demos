@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    function max_prompt(){
+        
+        var aftertax_income, dTax, sub;
+        var income = prompt("税前收入");
+        var distinction = (income-3500<1500)+(income-3500<4500)+(income-3500<9000)+(income-3500<35000)+(income-3500<55000)+(income-3500<80000);
+        if(income < 3500){
+            aftertax_income = income;
+            
+        }
+
+        else    switch(distinction)
+        {
+            case 0:dTax=(income-3500)*0.45-13505;aftertax_income=income-dTax;  break;
+	        case 1:dTax=(income-3500)*0.35-5505;aftertax_income=income-dTax; break;
+	        case 2:dTax=(income-3500)*0.30-2755;aftertax_income=income-dTax; break;
+	        case 3:dTax=(income-3500)*0.25-1005;aftertax_income=income-dTax;break;
+	        case 4:dTax=(income-3500)*0.20-555;aftertax_income=income-dTax;break;
+	        case 5:dTax=(income-3500)*0.10-105;aftertax_income=income-dTax;break;
+            case 6:dTax=(income-3500)*0.03;aftertax_income=income-dTax;break;
+            
+        }
+
+        document.write(aftertax_income);
+    }
+
+</script>
+<body>
+    <input type="button" onclick="max_prompt()"  value="请输入税前收入" />
+</body>
+</html>

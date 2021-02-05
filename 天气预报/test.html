@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src= "jquery-3.5.1.js"></script>
+</head>
+<body>
+    <div>  
+        <input type="text" id="input" style="position:absolute;width:100px;height:25px;"/>  
+        <select id="select" style="width:120px;height:25px;" >  
+        <option value="-1"></option>  
+        <option value="10">外观良好</option>  
+        <option value="9">接口损坏</option>  
+        <option value="1">正常磨损</option>  
+        <option value="2">严重划伤</option>  
+        <option value="4">严重磨损</option>  
+        <option value="3">磕伤碰伤</option>  
+        <option value="11">部件缺损</option>  
+        <option value="12">严重烧损</option>  
+        </select>  
+        </div>  
+</body>
+
+<script>
+    $('#select option').on('click', function() {  
+document.getElementById('input').value=  
+document.getElementById('select').options[document.getElementById('select').selectedIndex].value;  
+  
+})  
+</script>
+</html>

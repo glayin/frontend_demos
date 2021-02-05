@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   
+    <script src= "jquery-3.5.1.js"></script>
+</head>
+<style>
+body{
+    min-width: 300px;
+}
+select {
+  border:0;
+  appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+  background: white;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+ 
+select::-ms-expand { display: none; }
+    
+    .top_left{
+        height: 200px;
+        width: 30%;
+        float: left;
+        background-color: #1e96f2;
+        position: relative;
+    }
+
+    .top_left span,option{
+       color: white;
+       
+   }
+
+    #showCity{
+      display: flex;
+      width:80px;
+    }
+    
+    #changeWeather{
+      display: flex;
+      position: absolute;
+      left: 72px;
+      top: 5px;
+      background-color:  #1e96f2;
+      color: white;
+      border: 0.5px solid white;
+      border-top: none;
+      border-bottom: none;
+      text-align: center;
+    }
+    #row:nth-last-child(2) span:first-child  {
+          color: red;
+    }
+    #row:nth-last-child(1) span:first-child  {
+          color: red;
+    }
+
+    #showCityWeather{
+      position: relative;
+    } 
+
+    #showCityWeather span{
+      display: inline-block;
+    }
+
+    .top_right{
+
+        height: 200px;
+        width: 70%;
+        float: left;
+        text-align: right;
+        background-color: #1e96f2;
+        position: relative;
+       
+    }
+   
+   .top_right span{
+       color: white;
+       font-size: 25px;
+
+   }
+   #row #temrange{
+
+       text-align: right;
+       float: right;
+        
+   }
+
+   #row{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr ;
+      font-size: 0.6rem;
+   }
+
+   #row div{min-width: 100px;}
+   
+   .top_right span:last-child{
+    position: absolute ;
+    bottom: 10px;
+    right: 5px;
+    font-size:1rem;
+   }
+
+   
+   #row :nth-child(2n){
+     vertical-align: top;
+   }
+   #row :nth-child(2n){
+     margin-left: 10px;
+   }
+   
+</style>
+<body>
+
+    <div class="top_left" >
+         
+         <div id = "showCity">
+     
+         </div> 
+         <select name=""  id="changeWeather"   onchange="makeWeatherObj.filterCity(this.options[this.options.selectedIndex].value)"> 
+          <option value="" disabled selected hidden style="color:white"><span style="color:white">  切换</span></option></select>  
+        
+        
+        <div id = "todayPic"></div>
+    </div>
+    
+
+    <div class="top_right">
+         
+         
+    </div>
+    <span style =" margin: 10px 5px ;font-size : 20px;  display: inline-block; ">7日天气预报</span>
+    
+        <div id="showCityWeather">
+        
+        </div>
+
+    
+</body>
+    <script>
+        let $changeWeather = $('#changeWeather'),   //定义变量名
+        $showCityWeather = $('#showCityWeather'),
+        $showCity = $('#showCity'),
+        $nameOption,$weatherDiv,
+        $cityName;
+        let $top_right = $('.top_right'),
+        $todayweather;
+        let $todayPic = $('#todayPic'),
+        $todayImg;
+        
+        
+                    
+    imgArr = ['26.png', '28.png', '32.png', '37.png','64.png'];
+        
+    let myWeatherList = [
+         
+        { 
+          
+        cityName : '西安',
+        
+        cityWeather:[
+                 {  
+                     time:'07/04今日',
+                     img : imgArr[2],
+                     weather:'晴',
+                     low_tem:'24',
+                     high_tem:'35',
+                     present_tem: '30',
+                     wind:'4级',
+                     aqi :'58 良'
+                 },
+                 {
+                     time:'07/05明日',
+                     img : imgArr[1],
+                     weather:'晴',
+                     low_tem:'23',
+                     high_tem:'35'
+                     
+                 },
+                 {
+                     time:'07/06 周三',
+                     img : imgArr[1],
+                     weather:'多云转阴',
+                     low_tem:'25',
+                     high_tem:'32'
+                 },
+                 {
+                     time:'07/07 周四',
+                     img : imgArr[4],
+                     weather : '小雨转中雨',
+                     low_tem:'22',
+                     high_tem:'28'
+                },
+                 {
+                     time:'07/08 周五',
+                     img : imgArr[4],
+                     weather : '小雨',
+                     low_tem:'22',
+                     high_tem:'27'
+                 },
+                 {
+                     time:'07/09 周六',
+                     img : imgArr[0],
+                     weather : '阴',
+                     low_tem:'20',
+                     high_tem:'30'
+                 },
+                 {
+                     time:'07/10 周日',
+                     img : imgArr[1],
+                     weather : '多云转小雨',
+                     low_tem:'22',
+                     high_tem:'29'
+                 },
+                    ],
+        },
+        {cityName : '北京',
+         
+         cityWeather:[
+        {  
+                     time:'07/04今日',
+                     img : imgArr[2],
+                     weather:'晴',
+                     low_tem:'28',
+                     high_tem:'38',
+                     present_tem: '34',
+                     wind:'3级',
+                     aqi :'100 中'
+                 },
+                 {
+                     time:'07/05明日',
+                     img : imgArr[1],
+                     weather:'晴',
+                     low_tem:'23',
+                     high_tem:'36'
+                     
+                 },
+                 {
+                     time:'07/06 周三',
+                     img : imgArr[1],
+                     weather:'多云转阴',
+                     low_tem:'26',
+                     high_tem:'30'
+                 },
+                 {
+                     time:'07/07 周四',
+                     img : imgArr[4],
+                     weather : '小雨转中雨',
+                     low_tem:'23',
+                     high_tem:'27'
+                },
+                 {
+                     time:'07/08 周五',
+                     img : imgArr[4],
+                     weather : '小雨',
+                     low_tem:'23',
+                     high_tem:'29'
+                 },
+                 {
+                     time:'07/09 周六',
+                     img : imgArr[0],
+                     weather : '阴',
+                     low_tem:'26',
+                     high_tem:'33'
+                 },
+                 {
+                     time:'07/10 周日',
+                     img : imgArr[1],
+                     weather : '多云转小雨',
+                     low_tem:'26',
+                     high_tem:'28'
+                 },
+                
+                    ],
+        },
+
+        {cityName : '上海',
+
+        cityWeather:[
+        {  
+                     time:'07/04今日',
+                     img : imgArr[2],
+                     weather:'晴',
+                     low_tem:'30',
+                     high_tem:'37',
+                     present_tem: '30',
+                     wind:'4级',
+                     aqi :'56 良'
+                 },
+                 {
+                     time:'07/05明日',
+                     img : imgArr[1],
+                     weather:'晴',
+                     low_tem:'29',
+                     high_tem:'36'
+                     
+                 },
+                 {
+                     time:'07/06 周三',
+                     img : imgArr[1],
+                     weather:'多云转阴',
+                     low_tem:'28',
+                     high_tem:'36'
+                 },
+                 {
+                     time:'07/07 周四',
+                     img : imgArr[4],
+                     weather : '小雨转中雨',
+                     low_tem:'32',
+                     high_tem:'37'
+                },
+                 {
+                     time:'07/08 周五',
+                     img : imgArr[4],
+                     weather : '小雨',
+                     low_tem:'29',
+                     high_tem:'36'
+                 },
+                 {
+                     time:'07/09 周六',
+                     img : imgArr[0],
+                     weather : '阴',
+                     low_tem:'29',
+                     high_tem:'39'
+                 },
+                 {
+                     time:'07/10 周日',
+                     img : imgArr[1],
+                     weather : '多云转小雨',
+                     low_tem:'31',
+                     high_tem:'40'
+                 },
+                 
+
+                ],
+        }    
+    ];
+
+
+
+
+let makeWeatherObj = {
+  makeChoiceCity:function () {  //根据数据筛选出城市名称动态加载option
+     let cityNameArr =  [];
+     myWeatherList.forEach(function (item) {
+         cityNameArr.push(item.cityName)
+     });
+     this.makeSelectOption(cityNameArr) //将筛选的城市Arr执行makeSelectOption方法
+   },
+
+  makeSelectOption:function(arr){  //获取到城市名的arr来加载option
+      arr.forEach(function (item) {
+          
+          $nameOption = `<option>${item}</option>`;
+          $changeWeather.append($nameOption)
+
+      });
+  },
+
+filterCity:function(city){ //拿到选中的城市名称
+      
+    $showCityWeather.empty(); //每次清除之前的城市数据
+    $top_right.empty();
+    $todayPic.empty(); 
+    $showCity.empty();
+    let showWhichCity = myWeatherList.filter(function (item) { //过滤出选中的城市数据
+        return item.cityName === city
+    });
+      
+      this.makeShowCityWeather(showWhichCity[0].cityWeather) //将过滤出的城市数据执行makeShowCityWeather方法
+      this.showTodayWeather(showWhichCity[0].cityWeather[0]);
+      this.showTodayImage(showWhichCity[0]);
+},
+
+  makeShowCityWeather:function(whichCity){ //生成城市数据方法
+      whichCity.forEach(function (item) {
+          $weatherDiv = `<div id = "row"><div><span>${item.time}</span></div>
+          <div><img style="width:30px; height:30px" src='${item.img}'></img><span>${item.weather}</span></div>
+          <div id = "temrange"><span style = "color : green">${item.low_tem}</span><span>~</span><span style = "color:orange;">${item.high_tem}℃</span></div></div>` ;
+          $showCityWeather.append($weatherDiv);
+         
+        })
+
+     },
+
+  showTodayWeather:function(whichCity){
+      $todayweather =  `<span>${whichCity.weather}</span>&nbsp;&nbsp;</br><span>${whichCity.low_tem}</span>&nbsp;&nbsp;<span>~</span><span>${whichCity.high_tem}℃</span>&nbsp;&nbsp;</br><span>当前气温 ：${whichCity.present_tem}℃</span>&nbsp;&nbsp;<br/><span>东风${whichCity.wind}</span>&nbsp;&nbsp;</br><span style = "background-color : #4babf5 ">空气质量指数：${whichCity.aqi}</span>&nbsp;&nbsp;` ;
+      $top_right.append($todayweather);
+  },
+
+  showTodayImage:function(whichCity){
+    $todayImg = `<img style="width:80px; " src='${whichCity.cityWeather[0].img}'></img>`;
+    //$top_left.append($todayImg);
+    $todayPic.append($todayImg);
+    $cityName = `<span style="color:white ">${whichCity.cityName}天气</span>`;
+    $showCity.append($cityName);
+  }
+
+  };
+
+
+let init = () => { //页面初始加载需要执行的方法
+  makeWeatherObj.makeChoiceCity();
+  makeWeatherObj.filterCity('西安');
+
+};
+
+init();
+  
+    </script>
+</html>

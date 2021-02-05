@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automobile</title>
+    <script>
+        function Automobile(color, capacity, type){
+            this.color = color;
+            this.capacity = capacity;
+            this.type = type;   
+            
+
+            this.Engine = function(brands, version, volume, petroltype, torque, power){
+                this.brands = brands;
+                this.version = version;
+                this.volume = volume;
+                this.petroltype = petroltype;
+                this.torque = torque;
+                this.power = power;
+            }
+    
+            this.Tire=function(brand, size, texture){
+                this.brand = brand;
+                this.size = size;
+                this.texture = texture;
+                
+            }
+        
+        }
+            
+            
+
+        var automobile1 = new Automobile('black',5,'business');
+        
+        automobile1.Engine = new automobile1.Engine('Audora','L3','2.0L','96#','1500','2000');
+        automobile1.Tire = new automobile1.Tire('manto',200, 'buber');
+
+
+ 
+
+    //     Automobile.prototype.
+
+    //   Automobile.prototype.Engine('Audora','L3','2.0L','96#','1500','2000');
+    //   Automobile.prototype.Tire('Bora','100cm','rubber');
+
+        
+
+        console.log(automobile1);
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

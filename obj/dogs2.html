@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dogs2</title>
+    <script>
+
+        var dog = {
+
+            name:'Kitty',
+            favouractivity:'run around',
+            favourfood:'Goubuli steamed stuffed bun',
+            ability:'climb tree',
+
+        }
+
+        console.log(dog);
+
+        function Dog(name, favourfood, favouractivity, ability,song ){
+            
+            this.name = name;
+            this.favourfood = favourfood;
+            this.favouractivity = favouractivity;
+            this.ability = ability;
+            
+            this.newability = 'sing';
+            this.favoursong = song;
+            this.singing = function(){
+                console.log(this.favoursong);
+            }
+            
+            
+            this.Babydog = function(name){
+                this.name = name;
+                this.specialability = "cry";
+            }
+
+        }
+
+        function sing(){
+            alert( this.name + " favourite song :" + this.favoursong);
+        };
+
+          
+        var teddy = new Dog('teddy', 'cake', 'sleep', 'drawing', 'flyying');
+        var amy = new Dog('amy', 'hotpot', 'eat','singing','beating');
+        amy.Babydog = new amy.Babydog('alary');
+
+        Object.defineProperty(teddy, "favoursong", {writable: false});
+        teddy.singing();
+        console.log(teddy);
+        console.log(amy);
+        var str;
+        for(var key in amy){
+            str += key+":"+ amy[key] +" ";
+        }
+        console.log(str);
+        var res = str.split(" ");
+        console.log(res);
+    </script>
+
+</head>
+
+    
+<body>
+    
+</body>
+</html>

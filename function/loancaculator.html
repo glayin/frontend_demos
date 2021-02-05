@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>还款计算器</title>
+</head>
+<style>
+
+    body{
+        border: 2px solid black;
+        width: 80%;
+        padding-bottom: 20px;
+        border-radius: 10px;
+    }
+	td{
+		text-align:center;
+    }
+    
+    form{
+        padding-top: 20px ;
+        margin-left: 40px;
+    }
+
+    table{
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+
+    .table2{
+        border-top: 2px solid black;
+        width: 700px;
+    }
+</style>
+<body>	
+    <form>
+    <h2>贷款按揭计算器 V1.0</h2>
+	<p>贷款方式：<select name="type" id="type">
+			<option value="1">等额本息 </option>
+			<option value="3">到期还本按月付息 </option>
+			<option value="4">到期还本付息 </option>
+		</select>
+	</p>	
+    
+    
+    <p>贷款年限 <input type="text" value="" name = "time_limit" id = "time_limit">年
+    </p>
+
+	<p>贷款金额 <input type="text" value='' name="account" id='account'>万元</p>
+	<p>贷款年利率 <input type="text" value='' name="apr" id='apr'>%</p>
+	
+	
+    
+    <button type='button' id="cal" >计算</button>
+	<input type="reset"  value="重置"  id = "res">
+	
+
+    </form>
+
+    </br>
+
+    <form  class = "table2">
+        <p>月均还款 <input type = "text" id = "NO1"/></p>
+        <p>支付利息 <input type = "text" id = "NO2"/></p>
+        <p>还款总额 <input type = "text" id = "NO3"/></p>
+    </form>
+	<table border='1px' cellspacing="0" width='700px' id='table'>
+	</table>
+ 
+</body>
+
+<script>
+	var account    = document.getElementById('account');
+	var apr        = document.getElementById('apr');
+	var time_limit = document.getElementById('time_limit');
+	var typeObj    = document.getElementById('type');
+	var cal  	   = document.getElementById('cal');
+	var table  	   = document.getElementById('table');
+	var money      = account.value * 10000 ;   //借款金额
+	var year_apr   = (apr.value)/100; //年利率
+	var period     = time_limit.value * 12;//借款期限
+	var type       = typeObj.value;      //还款方式
+	var month_apr  = year_apr/12;     //月利率
+	
+	
+	res.onclick = function(){
+		document.getElementById("NO1").reset;
+		document.getElementById("NO2").reset;
+		document.getElementById("NO3").reset;
+	}
+	cal.onclick=function(){
+		money      = account.value * 10000;   //借款金额
+		year_apr   = (apr.value)/100; //年利率
+		period     = time_limit.value * 12;//借款期限
+		type       = typeObj.value;      //还款方式
+		month_apr  = year_apr/12;     //月利率
+		str=_cal(money,period,type,month_apr);
+		if(str!=false){
+ 			table.innerHTML=str;
+		}
+	}
+	/**
+	* @param money     借款金额
+	* @param period    借款期限
+	* @param month_apr 月利率
+	*/
+	function _cal(money,period ,type,month_apr){
+
+		function buttonack(){
+		document.getElementById("NO1").reset;
+	    document.getElementById("NO2").reset;
+	  	document.getElementById("NO3").reset;
+	}
+
+		var interest_tot   = 0;       //预期收益
+        var repayment_tot   = 0;       //本息合计
+        var remain = money;
+		if(false == isNumber(money)){
+			alert('借款金额格式错误');
+			return false;
+		}
+		if(false == isNumber(month_apr)){
+			alert('年利率格式错误');
+			return false;
+		}
+		if(0 == money || money < 0){
+			alert('借款金额不能小于或者等于0');
+			return false;
+		}
+		if(0 == month_apr || month_apr < 0){
+			alert('年利率不能小于或者等于0');
+			return false;
+		}
+		var str = '<tr>\
+                    <th>期数</th>\
+                    <th>偿还利息</th>\
+                    <th>偿还本金</th>\
+                    <th>当期月供</th>\
+                    <th>剩余本金</th>\
+                    </tr>';
+		 
+		if(type == 1){
+	 		repayment  = (money * month_apr * Math.pow((1 + month_apr),period))/(Math.pow((1 + month_apr),period) - 1);
+	 		for (var i = 1 ; i <=period ; i++) {
+	 			capital     = (money * month_apr * Math.pow((1 + month_apr),i - 1))/(Math.pow((1 + month_apr),period) - 1);
+	 			repayment_a = repayment.toFixed(2);
+	 			capital     = capital.toFixed(2);
+	 			interest_a  = (repayment_a - capital).toFixed(2);
+	 			
+	 			interest_tot+=interest_a*1;  
+                repayment_tot+=repayment_a*1
+        
+               
+                remain -= capital;
+ 
+                str += '<tr>\
+                        <td>'+i+'</td>\
+                        <td>'+interest_a+'</td>\
+                        <td>'+capital+'</td>\
+                        <td>'+repayment_a+'</td>\
+                        <td>'+remain.toFixed(2)+'</td>\
+                      </tr>'; 
+             }
+
+            document.getElementById("NO1").value = repayment_a;
+            document.getElementById("NO2").value = interest_tot.toFixed(2);
+            document.getElementById("NO3").value = repayment_tot;
+            }
+	 		//str+='<tr><td colspan="4">支付利息：'+interest_tot.toFixed(2)+'   还款总额：'+repayment_tot.toFixed(2)+'  月均还款：'+repayment_a+'</td></tr>';}
+		// }else if(type == 2){
+		// 	month_apr_new = month_apr * 4;
+		// 	period_new    = period / 4;
+ 		// 	repayment  = (money * month_apr_new * Math.pow((1 + month_apr_new),period_new))/(Math.pow((1 + month_apr_new),period_new) - 1);
+	 	// 	for (var i = 1 ; i <=period_new ; i++) {
+	 	// 		capital     = (money * month_apr_new * Math.pow((1 + month_apr_new),i - 1))/(Math.pow((1 + month_apr_new),period_new) - 1);
+	 	// 		repayment_a = repayment.toFixed(2);
+	 	// 		capital     = capital.toFixed(2);
+	 	// 		interest_a  = (repayment_a - capital).toFixed(2);
+	 	// 		str+='<tr>\
+		// 	 			<td>'+i+'</td>\
+		// 	 			<td>'+repayment_a+'</td>\
+		// 	 			<td>'+capital+'</td>\
+		// 	 			<td>'+interest_a+'</td>\
+	 	// 			</tr>';
+ 
+	 	// 	}
+		// }else if(type == 3){
+		// 	interest_a  = (money * month_apr).toFixed(2);
+	 	// 	for (var i = 1 ; i <=period ; i++) {
+	 	// 		capital     = 0;
+	 	// 		repayment_a = interest_a;
+	 	// 		if (i == period){
+	 	// 			capital 	= money;
+	 	// 			repayment_a = interest_a*1 + capital*1;
+	 	// 		}
+	 	// 		str+='<tr>\
+		// 	 			<td>'+i+'</td>\
+		// 	 	    	<td>'+repayment_a+'</td>\
+		// 	 			<td>'+capital+'</td>\
+		// 	 			<td>'+interest_a+'</td>\
+	 	// 			</tr>';
+	 	// 	}
+ 
+		// }else if(type == 4){
+		// 	//贷款本金×[1+月利率（‰）×贷款期（月）] 
+		// 	repayment = money * (1 + month_apr * period);
+		// 	repayment_a = repayment.toFixed(2);
+		// 	interest_a = (repayment_a - money).toFixed(2);
+		// 	str+='<tr>\
+	 	// 		<td>第'+period+'个月</td>\
+	 	// 		<td>'+repayment_a+'</td>\
+	 	// 		<td>'+money+'</td>\
+	 	// 		<td>'+interest_a+'</td>\
+		// 		</tr>';
+		// }else{
+		// 	str = '不存在';
+		// }
+		
+		return str;
+	}
+ 
+	function isNumber(val){
+	    var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+	    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+	    if(regPos.test(val) || regNeg.test(val)){
+	        return true;
+	    }else{
+	        return false;
+	    }
+	}
+ 
+</script>
+</html>
